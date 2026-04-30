@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Zekang Zhang — astrophysics / LMU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css?v=42" />
+</head>
+<body>
+<div id="root"></div>
+<canvas id="lens-canvas"></canvas>
+
+<script>
+const EFFECT_DEFAULTS = {
+  "lensMode": "lens",
+  "strength": 0.2,
+  "ca": 0.03,
+  "tint": 1,
+  "spec": 3,
+  "dyePalette": "mono",
+  "autoStir": false,
+  "fluidEnabled": true
+};
+</script>
+
+<!-- Libraries -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+<!-- Fluid + compositor -->
+<script src="fluid.js?v=14"></script>
+<script src="compositor.js?v=13"></script>
+<script src="nbody-lensing.js?v=25"></script>
+
+<!-- Page -->
+<script src="page.js?v=1"></script>
+
+<!-- Mount + run -->
+<script>
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const PALETTES = {
+  vermilion: [[0.85, 0.30, 0.18], [0.95, 0.55, 0.22], [0.70, 0.20, 0.30]],
+  cobalt:    [[0.20, 0.45, 0.95], [0.30, 0.65, 0.90], [0.55, 0.40, 0.85]],
+  acid:      [[0.75, 0.95, 0.25], [0.95, 0.85, 0.20], [0.30, 0.85, 0.55]],
+  mono:      [[0.85, 0.85, 0.82], [0.55, 0.55, 0.52], [0.28, 0.28, 0.26]],
+};
+
+function App() {
+  const tw = EFFECT_DEFAULTS;
+  React.useEffect(() => {
+    window.__effectConfig = tw;
+    if (window.__lens && tw) {
+      window.__lens.setParams({
+        strength: tw.strength,
+        ca: tw.ca,
+        tint: tw.tint,
+        spec: tw.spec,
+        mode: tw.lensMode === 'lens' ? 0 : tw.lensMode === 'ink' ? 1 : 2,
+      });
+    }
+  }, [tw]);
+
+  return (
+    React.createElement(Page)
+  );
+}
+
+root.render(React.createElement(App));
+
+function settleHashScroll() {
+  const id = window.location.hash ? decodeURIComponent(window.location.hash.slice(1)) : '';
+  if (!id) return;
+  const target = document.getElementById(id);
+  if (target) target.scrollIntoView({ block: 'start' });
+}
+window.addEventListener('hashchange', () => requestAnimationFrame(settleHashScroll));
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  settleHashScroll();
+  if (window.ContactLensing) window.ContactLensing();
+}));
+
+// === Fluid bring-up ===
+(async function bootFluid() {
+  // Wait a tick for React + fonts to settle
+  await new Promise((r) => setTimeout(r, 100));
+
+  const lens = document.getElementById('lens-canvas');
+  // Force a fresh canvas to guarantee a clean WebGL context with alpha:true.
+  const fresh = lens.cloneNode(false);
+  lens.parentNode.replaceChild(fresh, lens);
+  const lensCanvas = fresh;
+
+  // Confine the fluid overlay to the hero section's visible slice (computed each frame).
+  const heroEl = document.getElementById('top');
+  const headerEl = document.querySelector('.hdr');
+  // Canvas lives at the document level with position: fixed so it never
+  // suffers compositor-layer churn during scroll. Each frame we update its
+  // top/height to match the visible intersection of the hero with the viewport,
+  // and pass a clip uniform to the shader so fluid is squashed against a
+  // moving "ceiling" as the hero scrolls partially off-screen.
+  document.body.appendChild(lensCanvas);
+  lensCanvas.style.position = 'fixed';
+  lensCanvas.style.inset = 'auto';
+  lensCanvas.style.zIndex = '5';
+  lensCanvas.style.pointerEvents = 'none';
+
+  // The simulation FBOs keep their own fixed resolution; the display canvas
+  // follows the visible container so browser CSS never has to vertically
+  // resample a full-height WebGL frame.
+  let heroFullW = 0, heroFullH = 0;
+  function syncCanvasSize() {
+    if (!heroEl) return;
+    const r = heroEl.getBoundingClientRect();
+    heroFullW = r.width;
+    heroFullH = r.height;
+  }
+  let _lastW = 0, _lastH = 0;
+  syncCanvasSize();
+  window.addEventListener('resize', syncCanvasSize);
+  if (window.ResizeObserver && heroEl) {
+    new ResizeObserver(syncCanvasSize).observe(heroEl);
+  }
+
+  function getVisibleHeroSlice() {
+    if (!heroEl) return null;
+    const r = heroEl.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const headerBottom = headerEl ? headerEl.getBoundingClientRect().bottom : 0;
+    const visTop = Math.max(0, r.top, headerBottom);
+    const visBot = Math.min(vh, r.bottom);
+    const visH = Math.max(0, visBot - visTop);
+    return { r, vh, visTop, visBot, visH };
+  }
+
+  // Per-frame: place the canvas over the visible slice of the hero.
+  function placeCanvasOverVisibleHero() {
+    const slice = getVisibleHeroSlice();
+    if (!slice) return null;
+    const { r, vh, visTop, visBot, visH } = slice;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const bufferW = Math.max(1, Math.floor(r.width * dpr));
+    const bufferH = Math.max(1, Math.floor(visH * dpr));
+    if (bufferW !== _lastW || bufferH !== _lastH) {
+      _lastW = bufferW;
+      _lastH = bufferH;
+      lensCanvas.width = bufferW;
+      lensCanvas.height = bufferH;
+    }
+    lensCanvas.style.display = visH > 0 ? 'block' : 'none';
+    lensCanvas.style.left = r.left + 'px';
+    lensCanvas.style.width = r.width + 'px';
+    lensCanvas.style.top = visTop + 'px';
+    lensCanvas.style.height = visH + 'px';
+    return {
+      visFrac: r.height > 0 ? visH / r.height : 1,
+      // Where the visible band starts in fluid (flipped) Y, 0..1.
+      yTopFrac: r.height > 0 ? 1.0 - (visTop - r.top) / r.height : 1,
+      yBotFrac: r.height > 0 ? 1.0 - (visBot - r.top) / r.height : 0,
+      topClipped: visTop > r.top,
+      botClipped: r.bottom > vh,
+    };
+  }
+  placeCanvasOverVisibleHero();
+
+  const fluid = window.FluidSim(lensCanvas);
+  if (!fluid) {
+    console.warn('WebGL not available — page will render without lens.');
+    lensCanvas.style.display = 'none';
+    return;
+  }
+  const lensComp = window.LensCompositor(lensCanvas, fluid);
+  window.__lens = lensComp;
+
+  // Seed the compositor with a stable background texture. The current lens pass
+  // renders as a transparent film over the DOM, so scroll-time DOM snapshots are
+  // unnecessary and were the source of the visible flash while scrolling.
+  const bgCanvas = document.createElement('canvas');
+  const bgCtx = bgCanvas.getContext('2d');
+  bgCanvas.width = 512; bgCanvas.height = 512;
+  const bgGrad = bgCtx.createLinearGradient(0, 0, 512, 512);
+  bgGrad.addColorStop(0, '#f5f3ec');
+  bgGrad.addColorStop(1, '#e9e6dc');
+  bgCtx.fillStyle = bgGrad;
+  bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+  lensComp.updateBackground(bgCanvas);
+
+  // Mouse splats
+  let pointer = { x: 0.5, y: 0.5, dx: 0, dy: 0, down: false, moved: false };
+  function onMove(e) {
+    const r = lensCanvas.getBoundingClientRect();
+    const nx = (e.clientX - r.left) / r.width;
+    const ny = 1.0 - (e.clientY - r.top) / r.height;
+    // Only register splats when the cursor is over the hero region.
+    if (nx < 0 || nx > 1 || ny < 0 || ny > 1) {
+      pointer.x = nx; pointer.y = ny;
+      pointer.dx = 0; pointer.dy = 0;
+      pointer.moved = false;
+      return;
+    }
+    pointer.dx = (nx - pointer.x);
+    pointer.dy = (ny - pointer.y);
+    pointer.x = nx; pointer.y = ny;
+    pointer.moved = true;
+  }
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerdown', (e) => { pointer.down = true; onMove(e); });
+  window.addEventListener('pointerup', () => { pointer.down = false; });
+
+  // Auto-stir: gentle ambient swirls when no input
+  let lastInputT = performance.now();
+  window.addEventListener('pointermove', () => { lastInputT = performance.now(); });
+
+  function pickColor() {
+    const tw = window.__effectConfig || EFFECT_DEFAULTS;
+    const pal = PALETTES[tw.dyePalette] || PALETTES.vermilion;
+    const c = pal[Math.floor(Math.random() * pal.length)];
+    return [c[0] * 0.5, c[1] * 0.5, c[2] * 0.5];
+  }
+
+  // Page boots clean and dry — fluid only appears where the user stirs.
+
+  // Track scroll velocity for scroll-as-physics pushes.
+  let lastScrollY = window.scrollY;
+  let scrollVel = 0; // px / frame
+  let scrollVelLast = performance.now();
+  window.addEventListener('scroll', () => {
+    const now = performance.now();
+    const dy = window.scrollY - lastScrollY;
+    const dt = Math.max(1, now - scrollVelLast);
+    // Smooth: blend new sample into running velocity.
+    scrollVel = scrollVel * 0.6 + (dy / dt * 16.67) * 0.4; // px per frame at 60fps
+    lastScrollY = window.scrollY;
+    scrollVelLast = now;
+  }, { passive: true });
+  // Decay scroll velocity each frame so it falls back to 0 when scrolling stops.
+  setInterval(() => { scrollVel *= 0.85; }, 33);
+
+  let last = performance.now();
+  function frame() {
+    const now = performance.now();
+    const dt = Math.min(0.0166, (now - last) / 1000);
+    last = now;
+
+    const tw = window.__effectConfig || EFFECT_DEFAULTS;
+    const clip = placeCanvasOverVisibleHero();
+
+    if (!clip || clip.visFrac <= 0) {
+      requestAnimationFrame(frame);
+      return;
+    }
+
+    if (tw.fluidEnabled) {
+      // Pointer splat
+      if (pointer.moved && (Math.abs(pointer.dx) + Math.abs(pointer.dy)) > 0) {
+        fluid.applySplat(pointer.x, pointer.y, pointer.dx, pointer.dy, pickColor());
+        pointer.moved = false;
+      }
+
+      // Auto-stir: ambient splats when idle
+      if (tw.autoStir && (now - lastInputT) > 2500) {
+        if (Math.random() < 0.04) {
+          const ax = 0.2 + Math.random() * 0.6;
+          const ay = 0.2 + Math.random() * 0.6;
+          const av = 0.0008;
+          const adx = (Math.random() - 0.5) * av;
+          const ady = (Math.random() - 0.5) * av;
+          fluid.applySplat(ax, ay, adx, ady, pickColor());
+        }
+      }
+
+      // Compression force: when hero is partially scrolled out, push existing
+      // fluid toward the visible band. This is velocity-only; adding dye at the
+      // moving wall creates visible vertical columns when the container shrinks.
+      if (heroEl) {
+        const { r, vh, visTop, visBot, visH } = getVisibleHeroSlice();
+        const heroH = r.height;
+        const speed = Math.min(40, Math.abs(scrollVel)) / 40; // 0..1
+        if (visH > 0 && visH < heroH && speed > 0.05) {
+          const topClipped = visTop > r.top;
+          const botClipped = r.bottom > vh;
+          // In our flipped fluid Y, 1 = top of canvas, 0 = bottom.
+          const visTopFrac = 1.0 - (visTop - r.top) / heroH;
+          const visBotFrac = 1.0 - (visBot - r.top) / heroH;
+          // Force scales with scroll speed (rest = no push).
+          const force = 0.012 * speed;
+          // Scrolling DOWN (scrollVel > 0) means the page moves up under the
+          // viewport — the hero's top gets clipped from above. Fluid should
+          // be shoved toward the bottom of the visible band (toward smaller y in our flip).
+          const scrollSign = scrollVel > 0 ? -1 : 1;
+          const pushBand = (y, dy) => {
+            const yy = Math.min(0.98, Math.max(0.02, y));
+            for (let i = 0; i < 7; i++) {
+              const sx = (i + 0.5) / 7;
+              fluid.applyVelOnly(sx, yy, 0, dy, 9);
+            }
+          };
+          if (topClipped) {
+            pushBand(visTopFrac - 0.025, scrollSign * force);
+          }
+          if (botClipped) {
+            pushBand(visBotFrac + 0.025, scrollSign * force);
+          }
+        }
+      }
+
+      // Compression physics: when the hero's visible area shrinks (scrolled
+      // partway out), the dye gets denser (mass conservation) and physically
+      // shifted toward the visible band — like air compressed into a smaller
+      // volume. Releasing (scrolling back) decompresses smoothly.
+      if (heroEl) {
+        const { r, visTop, visBot, visH } = getVisibleHeroSlice();
+        const heroH = r.height;
+        if (visH > 0 && heroH > 0) {
+          const visFrac = clip.visFrac;
+          // Density is the inverse of visible fraction, clamped.
+          const targetDensity = Math.min(2.4, 1.0 / Math.max(0.35, visFrac));
+          // Sample shift moves the dye toward the visible band centroid.
+          // Visible centroid in fluid coords (Y flipped: 1 = top of canvas).
+          const visCenterFrac = 1.0 - ((visTop + visBot) * 0.5 - r.top) / heroH;
+          const targetShiftY = (0.5 - visCenterFrac) * (1.0 - visFrac) * 0.6;
+          // Smooth toward target so it eases (acts like spring).
+          window.__compState = window.__compState || { d: 1, sy: 0 };
+          window.__compState.d += (targetDensity - window.__compState.d) * 0.12;
+          window.__compState.sy += (targetShiftY - window.__compState.sy) * 0.12;
+          lensComp.setParams({
+            density: window.__compState.d,
+            shiftX: 0,
+            shiftY: window.__compState.sy,
+          });
+        }
+      }
+
+      fluid.step(dt);
+      lensComp.render();
+    } else {
+      const gl = fluid.gl;
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+    }
+
+    requestAnimationFrame(frame);
+  }
+requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>
