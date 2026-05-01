@@ -1,0 +1,15 @@
+# macOS metadata
+.DS_Store
+
+# Local design/development leftovers
+page.jsx
+tweaks-panel.jsx
+screenshots/
+uploads/
+scraps/
+
+# Dependency/build noise if this folder ever gets tooling
+node_modules/
+dist/
+.cache/
+.codex_tmp/
