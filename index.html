@@ -3,14 +3,96 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Zekang Zhang — astrophysics / LMU</title>
+<title>Zekang Zhang — Astrophysics PhD Student at LMU Munich</title>
+<meta name="description" content="Zekang Zhang is a PhD student at the University Observatory Munich, LMU, working on photometric galaxy surveys, weak lensing, shear estimation, redshift calibration, galaxy clustering, statistics, and machine learning." />
+<meta name="author" content="Zekang Zhang" />
+<meta name="keywords" content="Zekang Zhang, astrophysics, cosmology, LMU Munich, University Observatory Munich, galaxy surveys, weak lensing, shear calibration, redshift calibration, photometric redshift, photo-z, galaxy clustering, FORKLENS, blendemu, skyvar" />
+<meta name="robots" content="index,follow" />
+<meta name="theme-color" content="#f5f3ec" />
+<link rel="canonical" href="https://zhangzzk.github.io/" />
+<meta property="og:type" content="profile" />
+<meta property="og:title" content="Zekang Zhang — Astrophysics PhD Student at LMU Munich" />
+<meta property="og:description" content="Photometric galaxy surveys, weak lensing, shear estimation, redshift calibration, galaxy clustering, statistics, and machine learning." />
+<meta property="og:url" content="https://zhangzzk.github.io/" />
+<meta property="og:image" content="https://zhangzzk.github.io/assets/zekang-portrait.jpg" />
+<meta property="profile:first_name" content="Zekang" />
+<meta property="profile:last_name" content="Zhang" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Zekang Zhang — Astrophysics PhD Student at LMU Munich" />
+<meta name="twitter:description" content="Photometric galaxy surveys, weak lensing, shear estimation, redshift calibration, galaxy clustering, statistics, and machine learning." />
+<meta name="twitter:image" content="https://zhangzzk.github.io/assets/zekang-portrait.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="style.css?v=51" />
+<link rel="stylesheet" href="style.css?v=52" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Zekang Zhang",
+  "url": "https://zhangzzk.github.io/",
+  "image": "https://zhangzzk.github.io/assets/zekang-portrait.jpg",
+  "jobTitle": "PhD student",
+  "affiliation": {
+    "@type": "CollegeOrUniversity",
+    "name": "University Observatory Munich, Ludwig-Maximilians-Universitat Munchen",
+    "sameAs": "https://www.usm.uni-muenchen.de/"
+  },
+  "worksFor": {
+    "@type": "ResearchOrganization",
+    "name": "Astrophysics, Cosmology and Artificial Intelligence group"
+  },
+  "knowsAbout": [
+    "photometric galaxy surveys",
+    "weak gravitational lensing",
+    "shear calibration",
+    "photometric redshift calibration",
+    "galaxy clustering",
+    "cosmology",
+    "statistics",
+    "machine learning"
+  ],
+  "sameAs": [
+    "https://github.com/zhangzzk"
+  ]
+}
+</script>
 </head>
 <body>
-<div id="root"></div>
+<div id="root">
+  <main class="static-fallback">
+    <header>
+      <p class="lbl">Zekang Zhang</p>
+      <h1>Zekang Zhang — Astrophysics PhD Student at LMU Munich</h1>
+      <p>PhD student at the University Observatory Munich, LMU, in the Astrophysics, Cosmology and Artificial Intelligence group with Daniel Gruen.</p>
+    </header>
+    <section>
+      <h2>Research</h2>
+      <p>I work on photometric galaxy surveys: galaxy images, colours, positions, redshift distributions, selections, weak lensing, shear calibration, galaxy clustering, statistics, machine learning, and analytical modeling for cosmology.</p>
+      <ul>
+        <li>Image simulation and forward modeling: blending, PSF, noise, detection, photometry, and selection effects.</li>
+        <li>Redshift calibration: photometric redshift distributions, n(z), SOM-based colour-redshift calibration, and 4C3R2.</li>
+        <li>Shear estimation: weak-lensing shear response, PSF systematics, FORKLENS, and deep learning.</li>
+        <li>Statistics and inference: two-point statistics, selection functions, uncertainty budgets, and clustering bias.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Selected Publications</h2>
+      <ul>
+        <li><a href="https://arxiv.org/abs/2507.19130">Emulating redshift mixing due to blending in weak gravitational lensing</a></li>
+        <li><a href="https://arxiv.org/abs/2301.02986">FORKLENS: Accurate weak-lensing shear measurement with deep learning</a></li>
+        <li><a href="https://arxiv.org/abs/2308.14065">HybPSF: Hybrid PSF reconstruction for the observed JWST NIRCam image</a></li>
+        <li><a href="https://arxiv.org/abs/2208.01492">Impact of the turnover in the high-z galaxy luminosity function on the 21-cm signal during Cosmic Dawn and Epoch of Reionization</a></li>
+      </ul>
+      <p>More: <a href="https://ui.adsabs.harvard.edu/search/q=author%3A%22Zhang%2C%20Zekang%22&sort=date%20desc%2C%20bibcode%20desc&p_=0">NASA ADS</a>, <a href="https://scholar.google.com/scholar?q=%22Zekang+Zhang%22+astrophysics">Google Scholar</a>, <a href="https://github.com/zhangzzk">GitHub</a>.</p>
+    </section>
+    <section>
+      <h2>Contact</h2>
+      <p>Email: <a href="mailto:zekang.zhang@physik.lmu.de">zekang.zhang@physik.lmu.de</a></p>
+      <p>Address: University Observatory Munich (USM), Scheinerstr. 1, 81679 Munich. Room 222.</p>
+    </section>
+  </main>
+</div>
 <canvas id="lens-canvas"></canvas>
 
 <script>
@@ -35,7 +117,7 @@ const EFFECT_DEFAULTS = {
 <script src="nbody-lensing.js?v=25"></script>
 
 <!-- Page -->
-<script src="page.js?v=3"></script>
+<script src="page.js?v=4"></script>
 
 <!-- Mount + run -->
 <script>
