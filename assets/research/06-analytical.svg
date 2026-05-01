@@ -1,0 +1,29 @@
+<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+  <!-- crosshair / axes through centre -->
+  <g stroke="#1a1a18" stroke-width="0.5" opacity="0.35" stroke-dasharray="2 3">
+    <line x1="160" y1="28"  x2="160" y2="212"/>
+    <line x1="36"  y1="120" x2="284" y2="120"/>
+  </g>
+  <!-- contour ellipses, rotated, fading inward -->
+  <g fill="none" stroke="#1a1a18" transform="rotate(-18 160 120)">
+    <ellipse cx="160" cy="120" rx="116" ry="68" opacity="0.30" stroke-width="0.9"/>
+    <ellipse cx="160" cy="120" rx="92"  ry="54" opacity="0.45" stroke-width="0.9"/>
+    <ellipse cx="160" cy="120" rx="68"  ry="40" opacity="0.60" stroke-width="0.9"/>
+    <ellipse cx="160" cy="120" rx="44"  ry="26" opacity="0.78" stroke-width="0.9"/>
+    <ellipse cx="160" cy="120" rx="22"  ry="13" opacity="0.95" stroke-width="0.9"/>
+  </g>
+  <!-- best-fit point -->
+  <g fill="#1a1a18">
+    <circle cx="160" cy="120" r="2.2"/>
+  </g>
+  <!-- frame box -->
+  <g stroke="#1a1a18" stroke-width="0.6" fill="none" opacity="0.55">
+    <line x1="36"  y1="212" x2="284" y2="212"/>
+    <line x1="36"  y1="212" x2="36"  y2="28"/>
+  </g>
+  <!-- axis ticks -->
+  <g font-family="ui-monospace, 'IBM Plex Mono', monospace" fill="#1a1a18" opacity="0.5">
+    <text x="148" y="226" font-size="9">θ₁</text>
+    <text x="20"  y="124" font-size="9">θ₂</text>
+  </g>
+</svg>

@@ -12,6 +12,9 @@ const PROJECTS = [
       { label: 'redshift-mixing paper', href: 'https://arxiv.org/abs/2507.19130' },
       { label: 'HybPSF paper', href: 'https://arxiv.org/abs/2308.14065' },
     ],
+    figure: 'assets/research/01-image-simulation.svg',
+    figureAlt: 'Grid of simulated galaxy postage stamps with blends',
+    figureCaption: 'fig. 01 · postage stamps · placeholder',
   },
   {
     n: '02',
@@ -23,6 +26,9 @@ const PROJECTS = [
       { label: 'ESO note', href: 'https://doi.eso.org/10.18727/0722-6691/5307' },
       { label: 'blendemu paper', href: 'https://arxiv.org/abs/2507.19130' },
     ],
+    figure: 'assets/research/02-redshift.svg',
+    figureAlt: 'Spectroscopic and photometric n(z) distributions',
+    figureCaption: 'fig. 02 · n(z) · placeholder',
   },
   {
     n: '03',
@@ -34,6 +40,9 @@ const PROJECTS = [
       { label: 'FORKLENS paper', href: 'https://arxiv.org/abs/2301.02986' },
       { label: 'ASCL', href: 'https://ascl.net/2407.004' },
     ],
+    figure: 'assets/research/03-shear.svg',
+    figureAlt: 'Tangential shear pattern of ellipses around a central mass',
+    figureCaption: 'fig. 03 · shear field · placeholder',
   },
   {
     n: '04',
@@ -45,6 +54,9 @@ const PROJECTS = [
       { label: 'FORKLENS code', href: 'https://github.com/zhangzzk/forklens' },
       { label: 'hitchcock code', href: 'https://github.com/zhangzzk/hitchcock' },
     ],
+    figure: 'assets/research/04-machine-learning.svg',
+    figureAlt: 'Smooth emulator response fit through scattered training points',
+    figureCaption: 'fig. 04 · emulator response · placeholder',
   },
   {
     n: '05',
@@ -56,6 +68,9 @@ const PROJECTS = [
       { label: 'DC3R2 reference', href: 'https://academic.oup.com/mnras/article/531/2/2582/7686823' },
       { label: '4C3R2', href: 'https://wavesurvey.org/surveys/4c3r2/' },
     ],
+    figure: 'assets/research/05-statistics.svg',
+    figureAlt: 'Two-point measurement with error bars and one-sigma model band',
+    figureCaption: 'fig. 05 · two-point with covariance · placeholder',
   },
   {
     n: '06',
@@ -66,6 +81,9 @@ const PROJECTS = [
       { label: 'skyvar code', href: 'https://github.com/zhangzzk/skyvar' },
       { label: 'redshift-mixing paper', href: 'https://arxiv.org/abs/2507.19130' },
     ],
+    figure: 'assets/research/06-analytical.svg',
+    figureAlt: 'Concentric joint posterior contours in a parameter plane',
+    figureCaption: 'fig. 06 · joint contour · placeholder',
   },
 ];
 
@@ -221,6 +239,12 @@ function Research() {
             h('div', { className: 'proj-links' },
               p.links.map((l) => h(ExternalLink, { key: l.href, href: l.href }, `${l.label} →`)),
             ),
+          ),
+          p.figure && h('figure', { className: 'proj-fig' },
+            h('div', { className: 'proj-fig-frame' },
+              h('img', { src: p.figure, alt: p.figureAlt || `Figure for ${p.title}`, loading: 'lazy' }),
+            ),
+            h('figcaption', null, p.figureCaption || `fig. ${p.n} · placeholder`),
           ),
         )),
       ),

@@ -249,9 +249,11 @@ a:hover { border-color: var(--ink); }
 /* Projects */
 .proj { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .proj li {
-  display: grid; grid-template-columns: 60px minmax(0, 1fr);
-  gap: 32px;
-  padding: 28px 0;
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1.25fr) minmax(220px, 1fr);
+  column-gap: 40px;
+  row-gap: 18px;
+  padding: 32px 0;
   border-top: 1px solid var(--hairline);
   align-items: start;
 }
@@ -260,6 +262,36 @@ a:hover { border-color: var(--ink); }
 .proj-body { min-width: 0; }
 .proj-body h3 { font-family: 'Inter Tight', sans-serif; font-weight: 500; font-size: 22px; letter-spacing: 0; margin: 0 0 8px; }
 .proj-body p { margin: 0 0 12px; max-width: 48ch; color: var(--ink); overflow-wrap: anywhere; }
+.proj-fig {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: start;
+  min-width: 0;
+}
+.proj-fig-frame {
+  border: 1px solid var(--hairline);
+  background:
+    linear-gradient(180deg, rgba(14,14,12,0.025), rgba(14,14,12,0.01));
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  display: block;
+}
+.proj-fig img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 14px;
+}
+.proj-fig figcaption {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
 .tags { display: flex; gap: 8px; flex-wrap: wrap; }
 .tags span {
   font-family: 'IBM Plex Mono', monospace; font-size: 10px;
@@ -363,6 +395,16 @@ a:hover { border-color: var(--ink); }
   .card { padding: 20px 20px 16px; }
   .about-card { padding: 16px 18px 14px; gap: 0; }
   .card-row { grid-template-columns: 78px 1fr; gap: 12px; }
+  /* Research: collapse figure under body at narrower widths */
+  .proj li {
+    grid-template-columns: 60px minmax(0, 1fr);
+    column-gap: 32px;
+    row-gap: 20px;
+  }
+  .proj-fig {
+    grid-column: 2;
+    max-width: 440px;
+  }
 }
 
 /* Palettes */
@@ -396,7 +438,8 @@ a:hover { border-color: var(--ink); }
   .sec-body.two { grid-template-columns: 1fr; gap: 32px; }
   .contact-orbit { grid-template-columns: 1fr; min-height: 520px; }
   .contact-card { grid-column: 1; margin: 0 0 28px; }
-  .pubs li, .proj li { grid-template-columns: 1fr; gap: 8px; }
+  .pubs li, .proj li { grid-template-columns: 1fr; gap: 14px; }
+  .proj-fig { grid-column: 1; max-width: 420px; }
   .ft { grid-template-columns: 1fr; gap: 8px; text-align: left; }
   .ft > div { text-align: left !important; }
 }

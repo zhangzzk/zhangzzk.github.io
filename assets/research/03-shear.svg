@@ -1,0 +1,39 @@
+<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+  <!-- shear ellipses arranged with tangential pattern around centre (160,120) -->
+  <g fill="none" stroke="#1a1a18" stroke-width="1" opacity="0.7">
+    <!-- row 0, y=36 -->
+    <ellipse cx="44"  cy="36"  rx="13" ry="4" transform="rotate(-58 44 36)"/>
+    <ellipse cx="102" cy="36"  rx="13" ry="4" transform="rotate(-72 102 36)"/>
+    <ellipse cx="160" cy="36"  rx="13" ry="4" transform="rotate(-90 160 36)"/>
+    <ellipse cx="218" cy="36"  rx="13" ry="4" transform="rotate(72 218 36)"/>
+    <ellipse cx="276" cy="36"  rx="13" ry="4" transform="rotate(58 276 36)"/>
+
+    <!-- row 1, y=78 -->
+    <ellipse cx="44"  cy="78"  rx="13" ry="4" transform="rotate(-44 44 78)"/>
+    <ellipse cx="102" cy="78"  rx="13" ry="4" transform="rotate(-65 102 78)"/>
+    <ellipse cx="160" cy="78"  rx="13" ry="4" transform="rotate(-90 160 78)"/>
+    <ellipse cx="218" cy="78"  rx="13" ry="4" transform="rotate(65 218 78)"/>
+    <ellipse cx="276" cy="78"  rx="13" ry="4" transform="rotate(44 276 78)"/>
+
+    <!-- row 2, y=120 -->
+    <ellipse cx="44"  cy="120" rx="13" ry="4" transform="rotate(0 44 120)"/>
+    <ellipse cx="102" cy="120" rx="13" ry="4" transform="rotate(0 102 120)"/>
+    <ellipse cx="160" cy="120" rx="13" ry="4" transform="rotate(0 160 120)"/>
+    <ellipse cx="218" cy="120" rx="13" ry="4" transform="rotate(0 218 120)"/>
+    <ellipse cx="276" cy="120" rx="13" ry="4" transform="rotate(0 276 120)"/>
+
+    <!-- row 3, y=162 -->
+    <ellipse cx="44"  cy="162" rx="13" ry="4" transform="rotate(44 44 162)"/>
+    <ellipse cx="102" cy="162" rx="13" ry="4" transform="rotate(65 102 162)"/>
+    <ellipse cx="160" cy="162" rx="13" ry="4" transform="rotate(90 160 162)"/>
+    <ellipse cx="218" cy="162" rx="13" ry="4" transform="rotate(-65 218 162)"/>
+    <ellipse cx="276" cy="162" rx="13" ry="4" transform="rotate(-44 276 162)"/>
+
+    <!-- row 4, y=204 -->
+    <ellipse cx="44"  cy="204" rx="13" ry="4" transform="rotate(58 44 204)"/>
+    <ellipse cx="102" cy="204" rx="13" ry="4" transform="rotate(72 102 204)"/>
+    <ellipse cx="160" cy="204" rx="13" ry="4" transform="rotate(90 160 204)"/>
+    <ellipse cx="218" cy="204" rx="13" ry="4" transform="rotate(-72 218 204)"/>
+    <ellipse cx="276" cy="204" rx="13" ry="4" transform="rotate(-58 276 204)"/>
+  </g>
+</svg>
