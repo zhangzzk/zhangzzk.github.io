@@ -142,10 +142,11 @@ a:hover { border-color: var(--ink); }
 .prose p:last-child { margin-bottom: 0; }
 .prose strong { font-weight: 600; }
 .prose em { font-style: italic; color: var(--dim); }
-.about-layout {
+.sec-body.two.about-layout {
   grid-template-columns: minmax(0, 50ch) minmax(0, 530px);
-  column-gap: clamp(14px, 1.5vw, 22px);
+  column-gap: clamp(40px, 3.2vw, 58px);
   row-gap: 18px;
+  align-items: center;
   justify-content: start;
 }
 .about-prose {
