@@ -4,7 +4,7 @@ const h = React.createElement;
 const PROJECTS = [
   {
     n: '01',
-    title: 'Image simulation and forward modeling',
+    title: 'How to fake a sky honestly',
     blurb: 'Forward-model galaxy images and catalogues to make observational systematics measurable: blending, PSF, noise, detection, photometry, and the way observing conditions move galaxies into or out of a survey sample.',
     tags: ['survey realism', 'blending', 'selection effects'],
     links: [
@@ -18,8 +18,8 @@ const PROJECTS = [
   },
   {
     n: '02',
-    title: 'Redshift calibration',
-    blurb: 'Treat redshift distributions as a core survey observable, not a bookkeeping step: effective n(z), SOM-based colour-redshift calibration, and spatially varying n(z, theta).',
+    title: 'Until we know how far the galaxies are',
+    blurb: 'Distances turn a sky map into cosmology, and they are rarely known as cleanly as we wish. Treat redshift distributions as a core survey observable, not a bookkeeping step: effective n(z), SOM-based colour-redshift calibration, and spatially varying n(z, theta).',
     tags: ['photo-z', 'n(z)', '4C3R2'],
     links: [
       { label: '4C3R2', href: 'https://wavesurvey.org/surveys/4c3r2/' },
@@ -32,8 +32,8 @@ const PROJECTS = [
   },
   {
     n: '03',
-    title: 'Shear estimation',
-    blurb: 'Calibrate how galaxy images and sample selections respond to shear when the measurement pipeline sees finite PSFs, noise, and blends. This is the lensing-specific side of the same survey-calibration problem.',
+    title: 'Light, gently bent',
+    blurb: 'Weak lensing lives in tiny coherent distortions. Calibrate how galaxy images and sample selections respond to shear when the measurement pipeline sees finite PSFs, noise, and blends. This is the lensing-specific side of the same survey-calibration problem.',
     tags: ['weak lensing', 'shear response', 'PSF'],
     links: [
       { label: 'FORKLENS code', href: 'https://github.com/zhangzzk/forklens' },
@@ -46,7 +46,7 @@ const PROJECTS = [
   },
   {
     n: '04',
-    title: 'Machine learning',
+    title: '"Machine of loving grace"',
     blurb: 'Use ML/DL where it compresses expensive simulations into reusable machinery: emulators for detection and blending responses, deep-learning shear measurement, and more experimental agentic systems on the side.',
     tags: ['emulation', 'deep learning', 'agents'],
     links: [
@@ -74,7 +74,7 @@ const PROJECTS = [
   },
   {
     n: '06',
-    title: 'Analytical modeling',
+    title: 'Be analytical sometimes',
     blurb: 'Build compact models before throwing computation at the problem: perturbative n(z, theta) and b(z, theta), projection kernels for angular clustering, and pairwise response models for blended images.',
     tags: ['formalism', 'projection effects', 'bias models'],
     links: [
@@ -213,8 +213,21 @@ function About() {
           h('img', { src: 'assets/zekang-portrait.jpg', alt: 'Portrait of Zekang Zhang' }),
         ),
         h('aside', { className: 'card about-card' },
-          h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'currently'), h('span', null, 'PhD, LMU / USM')),
-          h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'advisor'), h('span', null, 'Daniel Gruen / ACAI')),
+          h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'currently'),
+            h('span', null,
+              'PhD, ',
+              h(ExternalLink, { href: 'https://www.lmu.de/en/' }, 'LMU'),
+              ' / ',
+              h(ExternalLink, { href: 'https://www.physik.lmu.de/observatory/en/' }, 'USM'),
+            ),
+          ),
+          h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'advisor'),
+            h('span', null,
+              h(ExternalLink, { href: 'https://www.physik.lmu.de/observatory/en/people/contact-page/daniel-gruen-ba89d54b.html' }, 'Daniel Gruen'),
+              ' / ',
+              h(ExternalLink, { href: 'https://www.physik.lmu.de/observatory/en/research/cosmology/acai-group/' }, 'ACAI'),
+            ),
+          ),
           h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'focus'), h('span', null, 'galaxy-survey systematics')),
           h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'signals'), h('span', null, 'redshift · shear · clustering')),
           h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'methods'), h('span', null, 'statistics · ML · simulation')),
