@@ -18,7 +18,7 @@ const PROJECTS = [
   },
   {
     n: '02',
-    title: 'Until we know how far the galaxies are',
+    title: 'The distance of galaxies',
     blurb: 'Distances turn a sky map into cosmology, and they are rarely known as cleanly as we wish. Treat redshift distributions as a core survey observable, not a bookkeeping step: effective n(z), SOM-based colour-redshift calibration, and spatially varying n(z, theta).',
     tags: ['photo-z', 'n(z)', '4C3R2'],
     links: [
@@ -74,7 +74,7 @@ const PROJECTS = [
   },
   {
     n: '06',
-    title: 'Be analytical sometimes',
+    title: 'Be analytical',
     blurb: 'Build compact models before throwing computation at the problem: perturbative n(z, theta) and b(z, theta), projection kernels for angular clustering, and pairwise response models for blended images.',
     tags: ['formalism', 'projection effects', 'bias models'],
     links: [
@@ -204,8 +204,7 @@ function About() {
           'impact on angular clustering. The next thread is photometric n(z) ',
           'calibration with 4C3R2, especially selection functions in ',
           'SOM-based colour-redshift calibration. Outside the core research ',
-          'lane, I am also obsessed with agentic AI systems, ',
-          'and, as an amateur, game theory and investments.',
+          'lane, as an amateur, I am also obsessed with agentic AI systems.',
         ),
       ),
       h('div', { className: 'about-side' },
@@ -231,7 +230,7 @@ function About() {
           h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'focus'), h('span', null, 'galaxy-survey systematics')),
           h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'signals'), h('span', null, 'redshift · shear · clustering')),
           h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'methods'), h('span', null, 'statistics · ML · simulation')),
-          h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'side quests'), h('span', null, 'agentic AI · investments')),
+          h('div', { className: 'card-row' }, h('span', { className: 'lbl' }, 'side quests'), h('span', null, 'agentic AI')),
         ),
       ),
     ),
