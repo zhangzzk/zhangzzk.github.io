@@ -182,7 +182,7 @@ function SectionHead({ n, title }) {
 }
 
 function About() {
-  return h('section', { className: 'sec', id: 'about' },
+  return h('section', { className: 'sec reveal', id: 'about' },
     h(SectionHead, { n: '01', title: 'About' }),
     h('div', { className: 'sec-body two about-layout' },
       h('div', { className: 'prose about-prose' },
@@ -239,7 +239,7 @@ function About() {
 }
 
 function Research() {
-  return h('section', { className: 'sec', id: 'research' },
+  return h('section', { className: 'sec reveal', id: 'research' },
     h(SectionHead, { n: '02', title: 'Research themes' }),
     h('div', { className: 'sec-body' },
       h('ul', { className: 'proj' },
@@ -266,7 +266,7 @@ function Research() {
 }
 
 function Publications() {
-  return h('section', { className: 'sec', id: 'publications' },
+  return h('section', { className: 'sec reveal', id: 'publications' },
     h(SectionHead, { n: '03', title: 'Publications' }),
     h('div', { className: 'sec-body' },
       h('ul', { className: 'pubs' },
@@ -296,7 +296,7 @@ function Publications() {
 }
 
 function CV() {
-  return h('section', { className: 'sec', id: 'cv' },
+  return h('section', { className: 'sec reveal', id: 'cv' },
     h(SectionHead, { n: '04', title: 'CV' }),
     h('div', { className: 'sec-body' },
       h('div', null,
@@ -312,7 +312,7 @@ function CV() {
 }
 
 function Contact() {
-  return h('section', { className: 'sec', id: 'contact' },
+  return h('section', { className: 'sec reveal', id: 'contact' },
     h(SectionHead, { n: '05', title: 'Contact' }),
     h('div', { className: 'sec-body' },
       h('div', { className: 'contact-orbit', 'aria-label': 'interactive particle field' },
@@ -335,7 +335,52 @@ function Footer() {
   );
 }
 
+function useScrollReveal() {
+  React.useEffect(() => {
+    const els = document.querySelectorAll('.reveal');
+    if (!els.length) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+}
+
+function useActiveNav() {
+  React.useEffect(() => {
+    const sections = document.querySelectorAll('.sec, .hero');
+    const links = document.querySelectorAll('.hdr-r a');
+    if (!sections.length || !links.length) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          links.forEach((a) => {
+            const href = a.getAttribute('href');
+            if (href === '#' + id || (id === 'top' && href === '#about')) {
+              a.classList.add('active');
+            } else {
+              a.classList.remove('active');
+            }
+          });
+        }
+      });
+    }, { threshold: 0, rootMargin: '-30% 0px -50% 0px' });
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+}
+
 function Page() {
+  useScrollReveal();
+  useActiveNav();
+
   return h('div', { className: 'page' },
     h(Header),
     h(Hero),

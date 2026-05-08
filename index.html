@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="style.css?v=52" />
+<link rel="stylesheet" href="style.css?v=53" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -117,7 +117,7 @@ const EFFECT_DEFAULTS = {
 <script src="nbody-lensing.js?v=25"></script>
 
 <!-- Page -->
-<script src="page.js?v=4"></script>
+<script src="page.js?v=5"></script>
 
 <!-- Mount + run -->
 <script>
@@ -301,8 +301,6 @@ requestAnimationFrame(() => requestAnimationFrame(() => {
     const c = pal[Math.floor(Math.random() * pal.length)];
     return [c[0] * 0.5, c[1] * 0.5, c[2] * 0.5];
   }
-
-  // Page boots clean and dry — fluid only appears where the user stirs.
 
   // Track scroll velocity for scroll-as-physics pushes.
   let lastScrollY = window.scrollY;

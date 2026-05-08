@@ -109,8 +109,8 @@
         const py = (row + 0.5 + (rand() - 0.5) * 0.42) * cellH;
         x[i] = px;
         y[i] = py;
-        vx[i] = (rand() - 0.5) * 0.06;
-        vy[i] = (rand() - 0.5) * 0.06;
+        vx[i] = 0;
+        vy[i] = 0;
         mass[i] = 1;
       }
 
@@ -373,9 +373,7 @@
       state.pointer.down = false;
     });
     window.addEventListener('scroll', () => {
-      const dy = window.scrollY - state.lastScrollY;
       state.lastScrollY = window.scrollY;
-      state.scrollKick = state.scrollKick * 0.62 + clamp(dy, -90, 90);
     }, { passive: true });
 
     if (window.IntersectionObserver) {
