@@ -72,19 +72,19 @@ const PROJECTS = [
     figureAlt: 'Two-point measurement with error bars and one-sigma model band',
     figureCaption: 'fig. 05 · cosmology shift',
   },
-  {
-    n: '06',
-    title: 'Analytical modeling',
-    blurb: 'Build compact models before throwing computation at the problem: perturbative n(z, theta) and b(z, theta), projection kernels for angular clustering, and pairwise response models for blended images.',
-    tags: ['formalism', 'projection effects', 'bias models'],
-    links: [
-      { label: 'skyvar code', href: 'https://github.com/zhangzzk/skyvar' },
-      { label: 'redshift-mixing paper', href: 'https://arxiv.org/abs/2507.19130' },
-    ],
-    figure: 'assets/research/06-analytical.svg?v=2',
-    figureAlt: 'Equation for projected two-point terms with redshift and selection perturbations',
-    figureCaption: 'fig. 06 · projected two-point expansion',
-  },
+  // {
+  //   n: '06',
+  //   title: 'Analytical modeling',
+  //   blurb: 'Build compact models before throwing computation at the problem: perturbative n(z, theta) and b(z, theta), projection kernels for angular clustering, and pairwise response models for blended images.',
+  //   tags: ['formalism', 'projection effects', 'bias models'],
+  //   links: [
+  //     { label: 'skyvar code', href: 'https://github.com/zhangzzk/skyvar' },
+  //     { label: 'redshift-mixing paper', href: 'https://arxiv.org/abs/2507.19130' },
+  //   ],
+  //   figure: 'assets/research/06-analytical.svg?v=2',
+  //   figureAlt: 'Equation for projected two-point terms with redshift and selection perturbations',
+  //   figureCaption: 'fig. 06 · projected two-point expansion',
+  // },
 ];
 
 const PUBLICATIONS = [
