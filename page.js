@@ -74,7 +74,7 @@ const PROJECTS = [
   },
   {
     n: '06',
-    title: 'Be analytical',
+    title: 'Analytical modeling',
     blurb: 'Build compact models before throwing computation at the problem: perturbative n(z, theta) and b(z, theta), projection kernels for angular clustering, and pairwise response models for blended images.',
     tags: ['formalism', 'projection effects', 'bias models'],
     links: [
@@ -128,6 +128,11 @@ function ExternalLink({ href, className, children }) {
 
 function Header() {
   return h('header', { className: 'hdr' },
+    h('div', { className: 'hdr-seal', 'aria-hidden': 'true' },
+      h('img', { src: 'assets/seal-zhang.png?v=2', alt: '' }),
+      h('img', { src: 'assets/seal-ze.png?v=2', alt: '' }),
+      h('img', { src: 'assets/seal-kang.png?v=2', alt: '' }),
+    ),
     h('div', { className: 'hdr-l' },
       h('div', { className: 'mark' }, 'ZZ'),
       h('div', { className: 'meta' },
@@ -146,30 +151,46 @@ function Header() {
 }
 
 function Hero() {
+  const fieldRef = React.useRef(null);
+  React.useEffect(() => {
+    const canvas = fieldRef.current;
+    if (!canvas || !window.CosmoSim) return;
+    let sim;
+    let alive = true;
+    (function boot() {
+      if (!alive) return;
+      if (!canvas.clientHeight) { requestAnimationFrame(boot); return; }
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#c8442a';
+      sim = window.CosmoSim(canvas, {
+        host: document.getElementById('top'),
+        seed: 34, nodes: 20, field: 200, step: 31,
+        accent: accent, accentRGB: '200,68,42',
+      });
+    })();
+    return () => { alive = false; if (sim && sim.destroy) sim.destroy(); };
+  }, []);
+
   return h('section', { className: 'hero', id: 'top' },
-    h('div', { className: 'hero-grid' },
+    h('div', { className: 'hero-field' },
+      h('canvas', { id: 'cosmo', ref: fieldRef, 'aria-hidden': 'true' }),
+    ),
+    h('div', { className: 'hero-inner' },
       h('div', { className: 'hero-tag' },
         h('span', { className: 'dot' }),
-        h('span', null, 'Astrophysics · galaxy surveys · Munich'),
+        h('span', null, 'Astrophysics · Cosmology · galaxy surveys'),
       ),
       h('h1', { className: 'hero-h' },
-        'A few', h('br'), 'questions', h('br'),
-        h('em', null, 'about the'), h('br'),
-        h('span', { className: 'hl' }, 'universe.'),
+        'Mapping evolving ', h('span', { className: 'hl' }, 'cosmic'), ' structure.',
       ),
-      h('div', { className: 'hero-sub' },
-        //   h('p', null,
-        //     "I'm an astrophysics PhD student at LMU working on photometric ",
-        //     'galaxy surveys: redshift calibration, anisotropic clustering, ',
-        //     'weak lensing, and the statistical machinery that turns messy ',
-        //     'survey data into cosmological measurements.',
-        //   ),
-        h('div', { className: 'hero-row' },
-          h('div', null, h('span', { className: 'lbl' }, 'field'), h('span', null, 'cosmology')),
-          h('div', null, h('span', { className: 'lbl' }, 'based in'), h('span', null, 'Munich, DE')),
-          h('div', null, h('span', { className: 'lbl' }, 'github'), h(ExternalLink, { href: 'https://github.com/zhangzzk/' }, 'zhangzzk')),
-        ),
+      h('p', { className: 'hero-lede' },
+        'Photometric galaxy surveys trace how matter clusters across cosmic time; ',
+        'weak lensing maps the unseen mass in between. I work on ',
+        h('span', { className: 'focus-em' }, 'the systematics that limit how precisely the two can be read.'),
       ),
+    ),
+    h('div', { className: 'hero-hint' },
+      'galaxy clustering ⊕ weak-lensing shear', h('br'),
+      h('span', { className: 'k' }, 'drag'), ' across the field to disturb the dark matter',
     ),
   );
 }
@@ -295,7 +316,24 @@ function Publications() {
 }
 
 function CV() {
+  const fieldRef = React.useRef(null);
+  React.useEffect(() => {
+    const canvas = fieldRef.current;
+    if (!canvas || !window.RandomWalk) return;
+    let sim;
+    let alive = true;
+    (function boot() {
+      if (!alive) return;
+      if (!canvas.clientHeight) { requestAnimationFrame(boot); return; }
+      sim = window.RandomWalk(canvas, { seed: 11, accentRGB: '200,68,42' });
+    })();
+    return () => { alive = false; if (sim && sim.destroy) sim.destroy(); };
+  }, []);
+
   return h('section', { className: 'sec reveal', id: 'cv' },
+    h('div', { className: 'cv-field' },
+      h('canvas', { id: 'cv-walk', ref: fieldRef, 'aria-hidden': 'true' }),
+    ),
     h(SectionHead, { n: '04', title: 'CV' }),
     h('div', { className: 'sec-body' },
       h('div', null,

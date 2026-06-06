@@ -345,7 +345,7 @@
 
     resize();
     window.addEventListener('resize', resize);
-    host.addEventListener('pointermove', (e) => setPointer(e, true));
+    host.addEventListener('pointermove', (e) => setPointer(e, false));
     host.addEventListener('pointerenter', (e) => setPointer(e, false));
     host.addEventListener('pointerleave', () => {
       state.pointer.active = false;
@@ -356,7 +356,7 @@
       state.pointer.down = true;
       if (host.setPointerCapture) host.setPointerCapture(e.pointerId);
       setPointer(e, false);
-      if (state.pointer.active) applyPunch(state.pointer.x, state.pointer.y, 2.464, 145);
+      if (state.pointer.active) applyPunch(state.pointer.x, state.pointer.y, 0.74, 145);
     });
     host.addEventListener('pointerup', (e) => {
       state.pointer.down = false;
@@ -376,15 +376,13 @@
       state.lastScrollY = window.scrollY;
     }, { passive: true });
 
+    // Run continuously from page load (not gated on scrolling to Contact),
+    // so the structure has already formed by the time the section is reached.
+    state.visible = true;
+    wake();
     if (window.IntersectionObserver) {
-      const observer = new IntersectionObserver((entries) => {
-        state.visible = entries.some((entry) => entry.isIntersecting);
-        if (state.visible) wake();
-      }, { threshold: 0.04 });
+      const observer = new IntersectionObserver(() => wake(), { threshold: 0.04 });
       observer.observe(host);
-    } else {
-      state.visible = true;
-      wake();
     }
   }
 
