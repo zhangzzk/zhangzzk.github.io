@@ -32,11 +32,14 @@
     let grid = [];      // precomputed whisker grid points {x,y,xf}
     const step = opts.step || 34;
 
-    // horizontal emphasis: 0 under the text (left) -> 1 on the open right
+    // horizontal emphasis: 0 under the text -> 1 on the open side.
+    // `mirror` puts the open side on the left instead of the right.
     const edge0 = opts.fadeStart != null ? opts.fadeStart : 0.15;
     const edgeW = opts.fadeWidth != null ? opts.fadeWidth : 0.50;
+    const mirror = !!opts.mirror;
     function xfade(x) {
-      const t = Math.min(1, Math.max(0, (x / W - edge0) / edgeW));
+      const u = mirror ? 1 - x / W : x / W;
+      const t = Math.min(1, Math.max(0, (u - edge0) / edgeW));
       return t * t * (3 - 2 * t);
     }
 
@@ -46,9 +49,10 @@
       const rnd = mulberry32(seed);
       halos = []; gals = []; P = [];
       const N = opts.nodes || 14;
-      // dark-matter halo cores, positions skewed to the right
+      // dark-matter halo cores, positions skewed toward the open side
       for (let i = 0; i < N; i++) {
-        const x = W * (0.10 + 0.86 * Math.pow(rnd(), 0.6));
+        const u = 0.10 + 0.86 * Math.pow(rnd(), 0.6);
+        const x = W * (mirror ? 1 - u : u);
         const y = H * (0.06 + 0.88 * rnd());
         const m = 2.6 + rnd() * 5.5;
         halos.push({ x, y, hx: x, hy: y, vx: 0, vy: 0, m, links: [] });
